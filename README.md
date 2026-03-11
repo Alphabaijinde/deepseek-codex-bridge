@@ -2,7 +2,64 @@
 
 Local bridge: connect DeepSeek/OpenAI-compatible reasoning outputs to Codex CLI.
 
-## Quick Start
+## Quick Start (with Docker)
+
+```bash
+# 1. Pull and run deepseek2api container
+docker run -d --name deepseek2api \
+  -p 5001:5001 \
+  -v $(pwd)/reverse-api.config.json:/app/config.json \
+  ghcr.io/iidamie/deepseek2api:latest
+
+# 2. Get your DeepSeek token and save to config
+#    (see "Get Your DeepSeek Token" below)
+
+# 3. Restart container with your token
+docker restart deepseek2api
+
+# 4. Use the bridge
+cd /home/user/work/workspace/deepseek-codex-bridge
+source .env.reverse
+echo "your question" | npm run ask
+```
+
+## Get Your DeepSeek Token
+
+1. Open https://chat.deepseek.com in browser
+2. Login with WeChat
+3. Press F12 → Application → Local Storage → chat.deepseek.com
+4. Copy `userToken` value
+5. Save to `reverse-api.config.json`:
+
+```json
+{
+  "keys": ["your-local-api-key"],
+  "accounts": [{"token": "your-userToken-here"}]
+}
+```
+
+6. Update `.env.reverse`:
+```bash
+export USE_MODE=reverse
+export REVERSE_API_BASE_URL="http://127.0.0.1:5001/v1"
+export REVERSE_API_KEY="your-userToken-here"
+export REVERSE_API_MODEL="deepseek-reasoner"
+```
+
+## Token Refresh (when expired)
+
+When DeepSeek returns "invalid token", run:
+
+```bash
+cd /home/user/work/workspace/deepseek-codex-bridge
+npm run refresh-token
+```
+
+Then scan WeChat QR code to get new token.
+
+---
+
+## Original README
 
 ```bash
 cd /home/user/work/workspace/deepseek-codex-bridge
