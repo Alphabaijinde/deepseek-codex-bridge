@@ -1,0 +1,19 @@
+{
+  "name": "deepseek-codex-bridge",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Local bridge: DeepSeek web UI to Codex CLI",
+  "type": "commonjs",
+  "scripts": {
+    "refresh-token": "node refresh-token.js",
+    "save-session": "node save-session.js",
+    "ask": "node ds-codex.js",
+    "setup-reverse": "./scripts/setup-reverse.sh",
+    "start-reverse-api": "./scripts/start-reverse-api.sh",
+    "start-reverse-api-python": "./scripts/start-reverse-api-python.sh"
+  },
+  "dependencies": {
+    "playwright": "^1.44.0",
+    "openai": "^4.77.0"
+  }
+}

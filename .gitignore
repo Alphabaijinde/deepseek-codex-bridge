@@ -1,0 +1,6 @@
+node_modules/
+.venv/
+*.log
+deepseek.storage.json
+.env.reverse
+deepseek2api/
