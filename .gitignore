@@ -4,3 +4,4 @@ node_modules/
 deepseek.storage.json
 .env.reverse
 deepseek2api/
+.conversation_history.json

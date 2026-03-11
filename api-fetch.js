@@ -67,7 +67,7 @@ function getApiKey(providerName) {
   return key;
 }
 
-async function apiFetch(prompt) {
+async function apiFetch(promptOrMessages) {
   const provider = getProvider();
   const model = getModel(provider);
   const apiKey = getApiKey(provider.name.toLowerCase());
@@ -78,12 +78,12 @@ async function apiFetch(prompt) {
     baseURL: provider.baseURL,
   });
 
-  const messages = [
-    {
-      role: "user",
-      content: prompt,
-    },
-  ];
+  let messages;
+  if (Array.isArray(promptOrMessages)) {
+    messages = promptOrMessages;
+  } else {
+    messages = [{ role: "user", content: promptOrMessages }];
+  }
 
   const extraParams = {};
   if (includeReasoning && provider.supportsReasoning && model.includes("deepseek")) {

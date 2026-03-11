@@ -24,7 +24,13 @@ async function waitForStableText(locator, maxMs, intervalMs) {
   return last;
 }
 
-async function deepseekFetch(prompt) {
+async function deepseekFetch(promptOrMessages) {
+  let prompt;
+  if (Array.isArray(promptOrMessages)) {
+    prompt = promptOrMessages.map(m => `${m.role}: ${m.content}`).join("\n");
+  } else {
+    prompt = promptOrMessages;
+  }
   const inputSelector = process.env.DEEPSEEK_INPUT_SELECTOR || DEFAULT_INPUT_SELECTOR;
   const assistantSelector = process.env.DEEPSEEK_ASSISTANT_SELECTOR || DEFAULT_ASSISTANT_SELECTOR;
   const thinkingSelector = process.env.DEEPSEEK_THINKING_SELECTOR || DEFAULT_THINKING_SELECTOR;

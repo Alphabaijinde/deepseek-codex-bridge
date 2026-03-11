@@ -21,11 +21,18 @@ function normalizeContent(content) {
   return "";
 }
 
-async function reverseFetch(prompt) {
+async function reverseFetch(promptOrMessages) {
   const baseUrl =
     process.env.REVERSE_API_BASE_URL || "http://127.0.0.1:5001/v1";
   const apiKey = process.env.REVERSE_API_KEY || "local-key";
   const model = process.env.REVERSE_API_MODEL || "deepseek-reasoner";
+
+  let messages;
+  if (Array.isArray(promptOrMessages)) {
+    messages = promptOrMessages;
+  } else {
+    messages = [{ role: "user", content: promptOrMessages }];
+  }
 
   let response;
 
@@ -38,12 +45,7 @@ async function reverseFetch(prompt) {
       },
       body: JSON.stringify({
         model,
-        messages: [
-          {
-            role: "user",
-            content: prompt,
-          },
-        ],
+        messages,
         stream: false,
       }),
     });
