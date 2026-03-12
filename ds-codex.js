@@ -30,15 +30,15 @@ function getCodexArgs() {
 }
 
 (async () => {
-  const args = process.argv.slice(2);
+  const cliArgs = process.argv.slice(2);
   
-  if (args.includes("--clear-history")) {
+  if (cliArgs.includes("--clear-history")) {
     clearHistory();
     console.log("Conversation history cleared.");
     process.exit(0);
   }
   
-  if (args.includes("--show-history")) {
+  if (cliArgs.includes("--show-history")) {
     const history = getHistory();
     console.log("=== Conversation History ===");
     history.forEach((msg, i) => {
@@ -104,9 +104,14 @@ function getCodexArgs() {
   
   let contextInfo = "";
   if (includeContext && historyMessages.length > 0) {
-    contextInfo = `\n\n[Previous conversation (${historyMessages.length} messages)]\n`;
-    historyMessages.slice(-6).forEach(msg => {
-      contextInfo += `${msg.role}: ${msg.content.substring(0, 200)}\n`;
+    // Get configurable number of history messages (default: all)
+    const maxHistoryMessages = parseInt(process.env.MAX_HISTORY_MESSAGES || "999", 10);
+    const recentHistory = historyMessages.slice(-maxHistoryMessages);
+    
+    contextInfo = `\n\n[Conversation History (${recentHistory.length} messages)]\n`;
+    recentHistory.forEach(msg => {
+      // Full content, no truncation - Codex needs complete context
+      contextInfo += `${msg.role}: ${msg.content}\n\n`;
     });
   }
   
